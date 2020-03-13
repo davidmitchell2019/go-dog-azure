@@ -18,17 +18,16 @@ func main() {
 	}
 	_, err = pgfirewall.CreateOrUpdate(
 		context.Background(),
-		"databricks",
-		"test-for-logs",
-		"allow 0.0.0.0",
+		"test-rg",
+		"test-server-for-bdd",
+		"allow-internet",
 		postgresql.FirewallRule{
 			FirewallRuleProperties: &postgresql.FirewallRuleProperties{
 				StartIPAddress: to.StringPtr("0.0.0.0"),
-				EndIPAddress:   to.StringPtr("0.0.0.0"),
+				EndIPAddress:   to.StringPtr("255.255.255.255"),
 			},
 		},
 	)
-
 	if err != nil {
 		panic(err)
 	}
