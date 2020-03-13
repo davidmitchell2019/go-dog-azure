@@ -1,31 +1,28 @@
 package main
 
 import (
-	"flag"
-	"fmt"
-	"os"
-	"testing"
 	"context"
+	"os/exec"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/to"
 	"github.com/Azure/azure-sdk-for-go/services/preview/postgresql/mgmt/2017-12-01-preview/postgresql"
 	"github.com/Azure/go-autorest/autorest/azure/auth"
 	"github.com/cucumber/godog"
-	"github.com/cucumber/godog/colors"
 )
+
 //Given the subscription is set
-func setSubscription()
-{
+func theSubscriptionIsSet() error {
 	cmd := exec.Command("sh", "-c", "az account set -s ")
+	return godog.ErrPending
 }
+
 //When policy is applied
-func getPolicyAssignment()
-{
+func policyIsApplied() error {
 	cmd := exec.Command("sh", "-c", "")
+	return godog.ErrPending
 }
-//Then firewall rule should be rejected
-func createFirewallRule()
-{
+
+func firewallRuleShouldBeRejected() error {
 	// create a firewall client
 	pgfirewall := postgresql.NewFirewallRulesClient("e32cf796-5dbc-49a6-a569-c7255a117e0b")
 	// create an authorizer from env vars or Azure Managed Service Idenity
@@ -48,12 +45,13 @@ func createFirewallRule()
 	if err != nil {
 		panic(err2)
 	}
+	return godog.ErrPending
 }
-func FeatureContext(s *godog.Suite) {
-	s.Step(`^the subscription is set`, setSubscription)
-	s.Step(`^policy is applied$`, getPolicyAssignment)
-	s.Step(`^firewall rule should be rejected$`, createFirewallRule)
 
+func FeatureContext(s *godog.Suite) {
+	s.Step(`^the subscription is set$`, theSubscriptionIsSet)
+	s.Step(`^policy is applied$`, policyIsApplied)
+	s.Step(`^firewall rule should be rejected$`, firewallRuleShouldBeRejected)
 	s.BeforeScenario(func(*messages.Pickle) {
 		Godogs = 0 // clean the state before every scenario
 	})
