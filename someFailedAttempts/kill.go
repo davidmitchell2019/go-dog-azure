@@ -24,7 +24,7 @@ func policyIsApplied() error {
 
 func firewallRuleShouldBeRejected() error {
 	// create a firewall client
-	pgfirewall := postgresql.NewFirewallRulesClient("e32cf796-5dbc-49a6-a569-c7255a117e0b")
+	pgfirewall := postgresql.NewFirewallRulesClient("")
 	// create an authorizer from env vars or Azure Managed Service Idenity
 	authorizer, err := auth.NewAuthorizerFromEnvironment()
 	if err == nil {
