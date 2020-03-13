@@ -5,7 +5,11 @@ import (
 	"fmt"
 	"os"
 	"testing"
+	"context"
 
+	"github.com/Azure/azure-sdk-for-go/sdk/to"
+	"github.com/Azure/azure-sdk-for-go/services/preview/postgresql/mgmt/2017-12-01-preview/postgresql"
+	"github.com/Azure/go-autorest/autorest/azure/auth"
 	"github.com/cucumber/godog"
 	"github.com/cucumber/godog/colors"
 )
