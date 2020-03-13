@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"os/exec"
 
 	"github.com/Azure/azure-sdk-for-go/profiles/latest/postgresql/mgmt/postgresql"
@@ -12,11 +13,13 @@ import (
 
 func theSubscriptionIsSet() error {
 	cmd := exec.Command("sh", "-c", "az account set -s ")
+	fmt.Println(cmd)
 	return godog.ErrPending
 }
 
 func policyIsApplied() error {
 	cmd := exec.Command("sh", "-c", "")
+	fmt.Println(cmd)
 	return godog.ErrPending
 }
 
@@ -30,13 +33,13 @@ func firewallRuleShouldBeRejected() error {
 	}
 	_, err = pgfirewall.CreateOrUpdate(
 		context.Background(),
-		"databricks",
-		"test-for-logs",
-		"allow 0.0.0.0",
+		"test-rg",
+		"test-server-for-bdd",
+		"allow-internet",
 		postgresql.FirewallRule{
 			FirewallRuleProperties: &postgresql.FirewallRuleProperties{
 				StartIPAddress: to.StringPtr("0.0.0.0"),
-				EndIPAddress:   to.StringPtr("0.0.0.0"),
+				EndIPAddress:   to.StringPtr("255.255.255.255"),
 			},
 		},
 	)
