@@ -2,7 +2,8 @@ package main
 
 import (
 	"context"
-	"fmt"
+	"log"
+	"os"
 	"os/exec"
 
 	"github.com/Azure/azure-sdk-for-go/profiles/latest/postgresql/mgmt/postgresql"
@@ -11,18 +12,26 @@ import (
 	"github.com/cucumber/godog"
 )
 
-func theSubscriptionIsSet() error {
-	cmd := exec.Command("sh", "-c", "az account set -s ")
-	fmt.Println(cmd)
-	return godog.ErrPending
+func subscriptionIsSet() error {
+	cmd := exec.Command("az", "account", "set", "--subscription", "e32cf796-5dbc-49a6-a569-c7255a117e0b")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	err := cmd.Run()
+	if err != nil {
+		log.Fatalf("cmd.Run() failed with %s\n", err)
+	}
+	return nil
 }
-
 func policyIsApplied() error {
-	cmd := exec.Command("sh", "-c", "")
-	fmt.Println(cmd)
-	return godog.ErrPending
+	cmd := exec.Command("az", "policy", "assignment", "show", "--name", "7ee092beb6074d05bfafbe31")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	err := cmd.Run()
+	if err != nil {
+		log.Fatalf("cmd.Run() failed with %s\n", err)
+	}
+	return nil
 }
-
 func firewallRuleShouldBeRejected() error {
 	// create a firewall client
 	pgfirewall := postgresql.NewFirewallRulesClient("e32cf796-5dbc-49a6-a569-c7255a117e0b")
@@ -39,18 +48,18 @@ func firewallRuleShouldBeRejected() error {
 		postgresql.FirewallRule{
 			FirewallRuleProperties: &postgresql.FirewallRuleProperties{
 				StartIPAddress: to.StringPtr("0.0.0.0"),
-				EndIPAddress:   to.StringPtr("255.255.255.255"),
+				EndIPAddress:   to.StringPtr("0.0.0.0"),
 			},
 		},
 	)
 	if err != nil {
 		panic(err)
 	}
-	return godog.ErrPending
+	return nil
 }
 
 func FeatureContext(s *godog.Suite) {
-	s.Step(`^the subscription is set$`, theSubscriptionIsSet)
+	s.Step(`^subscription is set$`, subscriptionIsSet)
 	s.Step(`^policy is applied$`, policyIsApplied)
 	s.Step(`^firewall rule should be rejected$`, firewallRuleShouldBeRejected)
 }
