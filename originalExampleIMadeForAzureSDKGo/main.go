@@ -3,8 +3,8 @@ package main
 import (
 	"context"
 
+	"github.com/Azure/azure-sdk-for-go/profiles/latest/postgresql/mgmt/postgresqlgit "
 	"github.com/Azure/azure-sdk-for-go/sdk/to"
-	"github.com/Azure/azure-sdk-for-go/services/preview/postgresql/mgmt/2017-12-01-preview/postgresql"
 	"github.com/Azure/go-autorest/autorest/azure/auth"
 )
 
@@ -12,7 +12,7 @@ func main() {
 	// create a firewall client
 	pgfirewall := postgresql.NewFirewallRulesClient("e32cf796-5dbc-49a6-a569-c7255a117e0b")
 	// create an authorizer from env vars or Azure Managed Service Idenity
-	authorizer, err := auth.NewAuthorizerFromEnvironment()
+	authorizer, err := auth.NewAuthorizerFromCLI()
 	if err == nil {
 		pgfirewall.Authorizer = authorizer
 	}
