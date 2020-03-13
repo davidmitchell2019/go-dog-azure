@@ -8,13 +8,15 @@ import (
 	"github.com/Azure/go-autorest/autorest/azure/auth"
 )
 
-func createFirewallRule() {
+func main() {
+	// create a firewall client
 	pgfirewall := postgresql.NewFirewallRulesClient("e32cf796-5dbc-49a6-a569-c7255a117e0b")
+	// create an authorizer from env vars or Azure Managed Service Idenity
 	authorizer, err := auth.NewAuthorizerFromEnvironment()
 	if err == nil {
 		pgfirewall.Authorizer = authorizer
 	}
-	pgfirewall.CreateOrUpdate(
+	_, err2 := pgfirewall.CreateOrUpdate(
 		context.Background(),
 		"databricks",
 		"test-for-logs",
@@ -26,8 +28,8 @@ func createFirewallRule() {
 			},
 		},
 	)
-}
 
-func main() {
-	createFirewallRule()
+	if err != nil {
+		panic(err2)
+	}
 }
