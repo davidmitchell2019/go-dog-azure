@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 
-	"github.com/Azure/azure-sdk-for-go/profiles/latest/postgresql/mgmt/postgresqlgit "
+	"github.com/Azure/azure-sdk-for-go/profiles/latest/postgresql/mgmt/postgresql"
 	"github.com/Azure/azure-sdk-for-go/sdk/to"
 	"github.com/Azure/go-autorest/autorest/azure/auth"
 )
@@ -16,7 +16,7 @@ func main() {
 	if err == nil {
 		pgfirewall.Authorizer = authorizer
 	}
-	_, err2 := pgfirewall.CreateOrUpdate(
+	_, err = pgfirewall.CreateOrUpdate(
 		context.Background(),
 		"databricks",
 		"test-for-logs",
@@ -30,6 +30,6 @@ func main() {
 	)
 
 	if err != nil {
-		panic(err2)
+		panic(err)
 	}
 }

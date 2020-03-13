@@ -22,13 +22,13 @@ func policyIsApplied() error {
 
 func firewallRuleShouldBeRejected() error {
 	// create a firewall client
-	pgfirewall := postgresql.NewFirewallRulesClient("")
+	pgfirewall := postgresql.NewFirewallRulesClient("e32cf796-5dbc-49a6-a569-c7255a117e0b")
 	// create an authorizer from env vars or Azure Managed Service Idenity
-	authorizer, err := auth.NewAuthorizerFromEnvironment()
+	authorizer, err := auth.NewAuthorizerFromCLI()
 	if err == nil {
 		pgfirewall.Authorizer = authorizer
 	}
-	_, err2 := pgfirewall.CreateOrUpdate(
+	_, err = pgfirewall.CreateOrUpdate(
 		context.Background(),
 		"databricks",
 		"test-for-logs",
@@ -41,7 +41,7 @@ func firewallRuleShouldBeRejected() error {
 		},
 	)
 	if err != nil {
-		panic(err2)
+		panic(err)
 	}
 	return godog.ErrPending
 }
